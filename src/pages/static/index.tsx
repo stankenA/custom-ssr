@@ -1,4 +1,4 @@
-export const MainPage = () => {
+export const StaticPage = () => {
   return (
     <div>
       <h1>Static Page</h1>

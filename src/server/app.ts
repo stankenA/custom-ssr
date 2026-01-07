@@ -1,10 +1,10 @@
 import express from "express";
-import mainPage from "./routes/pages/main";
+import staticPage from "./routes/pages/static";
 
 export const createApp = () => {
   const app = express();
 
-  app.use(mainPage);
+  app.use(staticPage);
 
   return app;
 };
