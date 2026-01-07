@@ -1,1 +1,1 @@
-export { PORT } from "./env";
+export { PORT, ISR_REVALIDATE } from "./env";
