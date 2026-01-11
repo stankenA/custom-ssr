@@ -1,33 +1,11 @@
-import { Router } from "express";
-import { renderPage } from "../../render/render-page";
-import { getCache, setCache } from "../../cache";
-import { MainPage } from "../../../pages/main";
+import { MainPage } from "../../../client/pages/main";
 import { ISR_REVALIDATE } from "../../../shared/config";
+import { createPageHandler } from "../create-page-handler";
 
-const router = Router();
-const pageRoute = "/";
-
-router.get(pageRoute, (_, res) => {
-  const cachedPage = getCache(pageRoute);
-
-  if (!cachedPage) {
-    console.log("wop");
-    const html = renderPage(<MainPage date={Date.now()} />);
-    setCache(pageRoute, html);
-    return res.send(html);
-  }
-
-  const isStale = Date.now() - cachedPage.timestamp > ISR_REVALIDATE;
-
-  if (isStale) {
-    // revalidate в фоне
-    Promise.resolve().then(() => {
-      const newHtml = renderPage(<MainPage date={Date.now()} />);
-      setCache(pageRoute, newHtml);
-    });
-  }
-
-  return res.send(cachedPage.html);
+export default createPageHandler({
+  route: "/",
+  strategy: "isr",
+  getData: () => ({ date: Date.now() }),
+  render: ({ date }) => <MainPage date={date} />,
+  revalidateMs: ISR_REVALIDATE,
 });
-
-export default router;

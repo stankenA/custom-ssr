@@ -1,20 +1,14 @@
-import { Router } from "express";
-import { Post } from "../../../shared/types";
-import { PostPage } from "../../../pages/post";
-import { renderPage } from "../../render/render-page";
+import { PostPage } from "../../../client/pages/post";
+import { postApi } from "../../../shared/api";
+import { createPageHandler } from "../create-page-handler";
 
-const router = Router();
-const pageRote = "/posts/:id";
+export default createPageHandler({
+  route: "/posts/:id",
+  strategy: "ssr",
+  getData: async (req) => {
+    const post = await postApi.getPost({ id: req.params.id as string });
 
-router.get(pageRote, async (req, res) => {
-  const { id } = req.params;
-
-  const post = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${id}`
-  ).then((r) => r.json());
-
-  const html = renderPage(<PostPage post={post as Post} />);
-  res.send(html);
+    return post;
+  },
+  render: (post) => <PostPage post={post} />,
 });
-
-export default router;
