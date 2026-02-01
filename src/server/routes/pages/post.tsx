@@ -1,4 +1,4 @@
-import { PostPage } from "../../../client/pages/post";
+import { PostPage } from "../../../pages/post";
 import { postApi } from "../../../shared/api";
 import { createPageHandler } from "../create-page-handler";
 

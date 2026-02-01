@@ -4,9 +4,9 @@ type MainPageProps = {
 
 export const MainPage = ({ date }: MainPageProps) => {
   return (
-    <div>
+    <main>
       <h1>ISR page</h1>
       <p>Current date: {date}</p>
-    </div>
+    </main>
   );
 };

@@ -1,4 +1,4 @@
-import { StaticPage } from "../../../client/pages/static";
+import { StaticPage } from "../../../pages/static";
 import { createPageHandler } from "../create-page-handler";
 
 export default createPageHandler({

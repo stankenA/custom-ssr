@@ -1,4 +1,4 @@
-import { Post } from "../../../shared/types";
+import { Post } from "../../shared/types";
 
 type PostPageProps = {
   post: Post;

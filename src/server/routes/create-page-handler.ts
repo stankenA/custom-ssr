@@ -36,7 +36,7 @@ export function createPageHandler<TData>({
       if (isStale) {
         Promise.resolve().then(async () => {
           const data = getData ? await getData(req) : undefined;
-          const html = renderPage(render(data as TData));
+          const html = renderPage(render(data as TData), { initialData: data });
           setCache(cacheKey, html);
         });
       }
@@ -45,7 +45,7 @@ export function createPageHandler<TData>({
     }
 
     const data = getData ? await getData(req) : undefined;
-    const html = renderPage(render(data as TData));
+    const html = renderPage(render(data as TData), { initialData: data });
 
     if (strategy !== "ssr") {
       setCache(cacheKey, html);

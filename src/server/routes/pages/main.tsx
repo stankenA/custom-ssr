@@ -1,4 +1,4 @@
-import { MainPage } from "../../../client/pages/main";
+import { MainPage } from "../../../pages/main";
 import { ISR_REVALIDATE } from "../../../shared/config";
 import { createPageHandler } from "../create-page-handler";
 
