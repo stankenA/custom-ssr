@@ -2,9 +2,12 @@ import express from "express";
 import staticPage from "./routes/pages/static";
 import mainPage from "./routes/pages/main";
 import postPage from "./routes/pages/post";
+import path from "path";
 
 export const createApp = () => {
   const app = express();
+
+  app.use("/public", express.static(path.join(__dirname, "../../public")));
 
   app.use(staticPage);
   app.use(mainPage);

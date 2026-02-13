@@ -1,7 +1,7 @@
 export const StaticPage = () => {
   return (
-    <main>
-      <h1>Static Page</h1>
+    <main className='min-h-screen bg-indigo-600'>
+      <h1 className='text-amber-600 text-5xl'>Static Page</h1>
       <p>This page is fully static.</p>
     </main>
   );
