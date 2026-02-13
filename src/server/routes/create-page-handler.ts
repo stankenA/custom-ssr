@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import React from "react";
 import { getCache, setCache } from "../cache";
 import { renderPage } from "../render/render-page";
+import { getClientAssets } from "./assets";
 
 type PageHandlerConfig<TData> = {
   route: string;
@@ -19,6 +20,7 @@ export function createPageHandler<TData>({
   revalidateMs,
 }: PageHandlerConfig<TData>) {
   const router = Router();
+  const assets = getClientAssets();
 
   router.get(route, async (req: Request, res: Response) => {
     const cacheKey = route + JSON.stringify(req.params);
@@ -36,7 +38,7 @@ export function createPageHandler<TData>({
       if (isStale) {
         Promise.resolve().then(async () => {
           const data = getData ? await getData(req) : undefined;
-          const html = renderPage(render(data as TData));
+          const html = renderPage(render(data as TData), assets);
           setCache(cacheKey, html);
         });
       }
@@ -45,7 +47,7 @@ export function createPageHandler<TData>({
     }
 
     const data = getData ? await getData(req) : undefined;
-    const html = renderPage(render(data as TData));
+    const html = renderPage(render(data as TData), assets);
 
     if (strategy !== "ssr") {
       setCache(cacheKey, html);

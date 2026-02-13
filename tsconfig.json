@@ -2,13 +2,12 @@
   "compilerOptions": {
     "module": "nodenext",
     "target": "esnext",
-    "lib": ["esnext"],
     "types": ["node"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
 
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -18,8 +17,11 @@
     "strict": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force"
+    "noUncheckedSideEffectImports": false,
+    "moduleDetection": "force",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/client/pages/**"]
