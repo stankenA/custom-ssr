@@ -22,6 +22,11 @@ export function createPageHandler<TData>({
   const router = Router();
   const assets = getClientAssets();
 
+  const generateHtml = async (req: Request): Promise<string> => {
+    const data = getData ? await getData(req) : undefined;
+    return renderPage(render(data as TData), assets);
+  };
+
   router.get(route, async (req: Request, res: Response) => {
     const cacheKey = route + JSON.stringify(req.params);
 
@@ -37,8 +42,7 @@ export function createPageHandler<TData>({
 
       if (isStale) {
         Promise.resolve().then(async () => {
-          const data = getData ? await getData(req) : undefined;
-          const html = renderPage(render(data as TData), assets);
+          const html = await generateHtml(req);
           setCache(cacheKey, html);
         });
       }
@@ -46,8 +50,7 @@ export function createPageHandler<TData>({
       return res.send(cached.html);
     }
 
-    const data = getData ? await getData(req) : undefined;
-    const html = renderPage(render(data as TData), assets);
+    const html = await generateHtml(req);
 
     if (strategy !== "ssr") {
       setCache(cacheKey, html);

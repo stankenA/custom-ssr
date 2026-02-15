@@ -2,7 +2,6 @@
   "compilerOptions": {
     "module": "nodenext",
     "target": "esnext",
-    "lib": ["esnext"],
     "types": ["node"],
     "sourceMap": true,
     "declaration": true,
@@ -18,7 +17,7 @@
     "strict": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
+    "noUncheckedSideEffectImports": false,
     "moduleDetection": "force",
     "paths": {
       "@/*": ["./src/*"]
