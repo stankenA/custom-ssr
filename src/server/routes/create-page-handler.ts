@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import React from "react";
 import { getCache, setCache } from "../cache";
 import { renderPage } from "../render/render-page";
-import { getClientAssets } from "./assets";
+import { getPageAssets } from "./assets";
 
 type PageHandlerConfig<TData> = {
   route: string;
@@ -20,7 +20,23 @@ export function createPageHandler<TData>({
   revalidateMs,
 }: PageHandlerConfig<TData>) {
   const router = Router();
-  const assets = getClientAssets();
+
+  const getPageNameFromRoute = (route: string): string => {
+    // Убираем начальный слеш и динамические параметры
+    // Например: '/' -> 'main'
+    // '/posts' -> 'posts'
+    // '/posts/:id' -> 'posts'
+    // '/about/team' -> 'about'
+    const baseRoute = route.split("/")[1] || "main";
+
+    // Убираем динамические параметры (начинающиеся с :)
+    if (baseRoute.startsWith(":")) {
+      return "main";
+    }
+
+    return baseRoute;
+  };
+  const assets = getPageAssets(getPageNameFromRoute(route));
 
   router.get(route, async (req: Request, res: Response) => {
     const cacheKey = route + JSON.stringify(req.params);

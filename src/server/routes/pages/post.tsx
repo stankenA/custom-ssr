@@ -3,7 +3,7 @@ import { postApi } from "../../../shared/api";
 import { createPageHandler } from "../create-page-handler";
 
 export default createPageHandler({
-  route: "/posts/:id",
+  route: "/post/:id",
   strategy: "ssr",
   getData: async (req) => {
     const post = await postApi.getPost({ id: req.params.id as string });

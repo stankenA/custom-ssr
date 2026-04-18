@@ -13,13 +13,13 @@ export const Html = ({ children, css = [], js }: HtmlProps) => {
         <title>Custom SSR</title>
 
         {css.map((href) => (
-          <link key={href} rel='stylesheet' href={href} />
+          <link key={href} rel='stylesheet' href={"/public" + href} />
         ))}
       </head>
       <body>
         {children}
 
-        {js && <script type='module' src={js} />}
+        {js && <script type='module' src={"/public" + js} />}
       </body>
     </html>
   );
