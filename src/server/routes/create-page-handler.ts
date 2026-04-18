@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import React from "react";
 import { getCache, setCache } from "../cache";
 import { renderPage } from "../render/render-page";
-import { getClientAssets } from "./assets";
+import { getPageAssets } from "./assets";
 
 type PageHandlerConfig<TData> = {
   route: string;
@@ -20,15 +20,32 @@ export function createPageHandler<TData>({
   revalidateMs,
 }: PageHandlerConfig<TData>) {
   const router = Router();
-  const assets = getClientAssets();
+
+  const getPageNameFromRoute = (route: string): string => {
+    // Убираем начальный слеш и динамические параметры
+    // Например: '/' -> 'main'
+    // '/posts' -> 'posts'
+    // '/posts/:id' -> 'posts'
+    // '/about/team' -> 'about'
+    const baseRoute = route.split("/")[1] || "main";
+
+    // Убираем динамические параметры (начинающиеся с :)
+    if (baseRoute.startsWith(":")) {
+      return "main";
+    }
+
+    return baseRoute;
+  };
+  const assets = getPageAssets(getPageNameFromRoute(route));
 
   const generateHtml = async (req: Request): Promise<string> => {
     const data = getData ? await getData(req) : undefined;
-    return renderPage(render(data as TData), assets);
+    return renderPage(render(data as TData), { ...assets, initialData: data });
   };
 
   router.get(route, async (req: Request, res: Response) => {
-    const cacheKey = route + JSON.stringify(req.params);
+    const cacheKey =
+      strategy === "ssg" ? route : route + JSON.stringify(req.params);
 
     const cached = getCache(cacheKey);
 
@@ -41,16 +58,21 @@ export function createPageHandler<TData>({
         revalidateMs && Date.now() - cached.timestamp > revalidateMs;
 
       if (isStale) {
-        Promise.resolve().then(async () => {
-          const html = await generateHtml(req);
-          setCache(cacheKey, html);
-        });
+        generateHtml(req)
+          .then((html) => setCache(cacheKey, html))
+          .catch((err) => console.error("[ISR] Revalidation failed:", err));
       }
 
       return res.send(cached.html);
     }
 
-    const html = await generateHtml(req);
+    let html: string;
+    try {
+      html = await generateHtml(req);
+    } catch (err) {
+      console.error(`[${strategy.toUpperCase()}] getData failed:`, err);
+      return res.status(500).send("Internal Server Error");
+    }
 
     if (strategy !== "ssr") {
       setCache(cacheKey, html);
