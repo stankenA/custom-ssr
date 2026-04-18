@@ -1,15 +1,16 @@
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
 import "@/shared/styles/index.css";
+import { PAGE_NAME_SCRIPT_ID, INITIAL_DATA_SCRIPT_ID, ROOT_ELEMENT_ID } from "@/shared/config";
 
 const read = (id: string) => {
   const el = document.getElementById(id);
   return el ? JSON.parse(el.textContent ?? "null") : null;
 };
 
-const pageName: string = read("__page-name__");
-const initialData = read("__initial-data__") ?? {};
-const container = document.getElementById("root");
+const pageName: string = read(PAGE_NAME_SCRIPT_ID);
+const initialData = read(INITIAL_DATA_SCRIPT_ID) ?? {};
+const container = document.getElementById(ROOT_ELEMENT_ID);
 
 if (!container) throw new Error("Root container not found");
 if (!pageName) throw new Error("Page name not injected by server");

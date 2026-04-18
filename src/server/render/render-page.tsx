@@ -1,4 +1,5 @@
-import { Html } from "../../shared/html-template";
+import { PAGE_NAME_SCRIPT_ID, INITIAL_DATA_SCRIPT_ID } from "@/shared/config";
+import { Html } from "@/shared/html-template";
 import { ReactElement } from "react";
 import { renderToString } from "react-dom/server";
 
@@ -26,10 +27,10 @@ export const renderPage = (app: ReactElement, options?: RenderPageOptions) => {
     <Html css={options?.css} js={options?.js}>
       <div id='root' dangerouslySetInnerHTML={{ __html: appHtml }} />
       {options?.pageName && (
-        <JsonScript id='__page-name__' data={options.pageName} />
+        <JsonScript id={PAGE_NAME_SCRIPT_ID} data={options.pageName} />
       )}
       {options?.initialData != null && (
-        <JsonScript id='__initial-data__' data={options.initialData} />
+        <JsonScript id={INITIAL_DATA_SCRIPT_ID} data={options.initialData} />
       )}
     </Html>,
   );
