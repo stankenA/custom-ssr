@@ -1,14 +1,14 @@
-import { PostPage } from "../../../pages/post";
+import { PostPage } from "../../../pages/posts";
 import { postApi } from "../../../shared/api";
 import { createPageHandler } from "../create-page-handler";
 
 export default createPageHandler({
-  route: "/post/:id",
+  route: "/posts/:id",
   strategy: "ssr",
   getData: async (req) => {
     const post = await postApi.getPost({ id: req.params.id as string });
 
-    return post;
+    return { post };
   },
-  render: (post) => <PostPage post={post} />,
+  render: ({ post }) => <PostPage post={post} />,
 });

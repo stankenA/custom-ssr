@@ -26,11 +26,12 @@ export function createPageHandler<TData>({
   revalidateMs,
 }: PageHandlerConfig<TData>) {
   const router = Router();
-  const assets = getPageAssets(getPageNameFromRoute(route));
+  const pageName = getPageNameFromRoute(route);
+  const assets = getPageAssets();
 
   const generateHtml = async (req: Request): Promise<string> => {
     const data = getData ? await getData(req) : undefined;
-    return renderPage(render(data as TData), { ...assets, initialData: data });
+    return renderPage(render(data as TData), { ...assets, initialData: data, pageName });
   };
 
   router.get(route, async (req: Request, res: Response) => {

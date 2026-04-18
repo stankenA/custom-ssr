@@ -6,6 +6,7 @@ type RenderPageOptions = {
   js?: string;
   css?: string[];
   initialData?: unknown;
+  pageName?: string;
 };
 
 export const renderPage = (app: ReactElement, options?: RenderPageOptions) => {
@@ -14,6 +15,16 @@ export const renderPage = (app: ReactElement, options?: RenderPageOptions) => {
   const html = renderToString(
     <Html css={options?.css} js={options?.js}>
       <div id='root' dangerouslySetInnerHTML={{ __html: appHtml }} />
+
+      {options?.pageName ? (
+        <script
+          id='__page-name__'
+          type='application/json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(options.pageName),
+          }}
+        />
+      ) : null}
 
       {options?.initialData ? (
         <script

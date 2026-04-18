@@ -1,7 +1,7 @@
 import express from "express";
 import staticPage from "./routes/pages/static";
 import mainPage from "./routes/pages/main";
-import postPage from "./routes/pages/post";
+import postPage from "./routes/pages/posts";
 import path from "path";
 
 export const createApp = () => {
