@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "vite build",
-    "dev": "pnpm run build && tsx watch --env-file=.env src/server/index.ts"
+    "dev:client": "pnpm run build && vite build --watch",
+    "dev:server": "tsx watch --env-file=.env src/server/index.ts"
   },
   "keywords": [],
   "author": "",
