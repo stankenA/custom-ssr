@@ -6,11 +6,17 @@ import { getPageAssets } from "./assets";
 
 type PageHandlerConfig<TData> = {
   route: string;
-  strategy: "ssg" | "ssr" | "isr";
   getData?: (req: Request) => Promise<TData> | TData;
   render: (data: TData) => React.ReactElement;
-  revalidateMs?: number;
-};
+} & (
+  | { strategy: "ssg" | "ssr"; revalidateMs?: never }
+  | { strategy: "isr"; revalidateMs: number }
+);
+
+function getPageNameFromRoute(route: string): string {
+  const baseRoute = route.split("/")[1] || "main";
+  return baseRoute.startsWith(":") ? "main" : baseRoute;
+}
 
 export function createPageHandler<TData>({
   route,
@@ -20,22 +26,6 @@ export function createPageHandler<TData>({
   revalidateMs,
 }: PageHandlerConfig<TData>) {
   const router = Router();
-
-  const getPageNameFromRoute = (route: string): string => {
-    // Убираем начальный слеш и динамические параметры
-    // Например: '/' -> 'main'
-    // '/posts' -> 'posts'
-    // '/posts/:id' -> 'posts'
-    // '/about/team' -> 'about'
-    const baseRoute = route.split("/")[1] || "main";
-
-    // Убираем динамические параметры (начинающиеся с :)
-    if (baseRoute.startsWith(":")) {
-      return "main";
-    }
-
-    return baseRoute;
-  };
   const assets = getPageAssets(getPageNameFromRoute(route));
 
   const generateHtml = async (req: Request): Promise<string> => {
