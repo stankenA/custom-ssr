@@ -4,12 +4,15 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   base: "/public/",
+  resolve: {
+    alias: { "@": path.resolve(__dirname, "./src") },
+  },
   build: {
     outDir: "public",
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {
-      input: { entry: path.resolve(__dirname, "src/pages/entry.client.tsx") },
+      input: { entry: path.resolve(__dirname, "src/app/entry.client.tsx") },
       output: {
         entryFileNames: "js/[name]-[hash].js",
         chunkFileNames: "js/[name]-[hash].js",

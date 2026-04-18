@@ -43,7 +43,7 @@ function extractAssets(entry: ManifestEntry) {
 }
 
 export const getPageAssets = () => {
-  const entry = manifest["src/pages/entry.client.tsx"];
+  const entry = manifest["src/app/entry.client.tsx"];
   if (!entry) {
     console.warn("Client entry not found in manifest");
     return { js: "", css: [] };

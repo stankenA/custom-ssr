@@ -1,17 +1,14 @@
-import express from "express";
-import staticPage from "./routes/pages/static";
-import mainPage from "./routes/pages/main";
-import postPage from "./routes/pages/posts";
 import path from "path";
+import express from "express";
+import apiRouter from "./routes/api";
+import { discoverPageRoutes } from "./routes";
 
-export const createApp = () => {
+export const createApp = async () => {
   const app = express();
 
   app.use("/public", express.static(path.join(__dirname, "../../public")));
-
-  app.use(staticPage);
-  app.use(mainPage);
-  app.use(postPage);
+  app.use("/api", apiRouter);
+  await discoverPageRoutes(app);
 
   return app;
 };

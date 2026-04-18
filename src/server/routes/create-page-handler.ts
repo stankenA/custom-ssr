@@ -1,8 +1,7 @@
 import { Request, Response, Router } from "express";
 import React from "react";
 import { getCache, setCache } from "../cache";
-import { renderPage } from "../render/render-page";
-import { getPageAssets } from "./assets";
+import { renderPage, getPageAssets } from "../render";
 
 type PageHandlerConfig<TData> = {
   route: string;
