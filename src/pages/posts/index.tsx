@@ -1,11 +1,21 @@
 import { useState } from "react";
-import { Post } from "../../shared/types";
+import { Post, GetServerSideProps } from "@/shared/types";
+import { postApi } from "@/shared/api";
 
 type PostPageProps = {
   post?: Post;
 };
 
-export const PostPage = ({ post }: PostPageProps) => {
+export const pageConfig = { route: "/posts/:id" };
+export const getServerSideProps: GetServerSideProps<PostPageProps> = async ({
+  req,
+}) => {
+  const postId = req.params.id as string;
+  const post = await postApi.getPost({ id: postId });
+  return { props: { post } };
+};
+
+const PostPage = ({ post }: PostPageProps) => {
   const [number, setNumber] = useState(0);
 
   return (
@@ -18,3 +28,5 @@ export const PostPage = ({ post }: PostPageProps) => {
     </main>
   );
 };
+
+export default PostPage;

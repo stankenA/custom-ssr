@@ -2,35 +2,41 @@ import { Request, Response, Router } from "express";
 import React from "react";
 import { getCache, setCache } from "../cache";
 import { renderPage, getPageAssets } from "../render";
+import { GetServerSideProps } from "@/shared/types";
 
-type PageHandlerConfig<TData> = {
+type PageHandlerConfig<TProps extends Record<string, unknown>> = {
   route: string;
-  getData?: (req: Request) => Promise<TData> | TData;
-  render: (data: TData) => React.ReactElement;
-} & (
-  | { strategy: "ssg" | "ssr"; revalidateMs?: never }
-  | { strategy: "isr"; revalidateMs: number }
-);
+  page: React.ComponentType<TProps>;
+  getServerSideProps?: GetServerSideProps<TProps>;
+  revalidateMs?: number;
+};
 
 function getPageNameFromRoute(route: string): string {
   const baseRoute = route.split("/")[1] || "main";
   return baseRoute.startsWith(":") ? "main" : baseRoute;
 }
 
-export function createPageHandler<TData>({
+export function createPageHandler<TProps extends Record<string, unknown>>({
   route,
-  strategy,
-  getData,
-  render,
+  page: Page,
+  getServerSideProps,
   revalidateMs,
-}: PageHandlerConfig<TData>) {
+}: PageHandlerConfig<TProps>) {
   const router = Router();
   const pageName = getPageNameFromRoute(route);
   const assets = getPageAssets();
 
-  const generateHtml = async (req: Request): Promise<string> => {
-    const data = getData ? await getData(req) : undefined;
-    return renderPage(render(data as TData), { ...assets, initialData: data, pageName });
+  const strategy = getServerSideProps
+    ? revalidateMs
+      ? "isr"
+      : "ssr"
+    : "ssg";
+
+  const generateHtml = async (req: Request, res: Response): Promise<string> => {
+    const props = getServerSideProps
+      ? (await getServerSideProps({ req, res })).props
+      : ({} as TProps);
+    return renderPage(<Page {...props} />, { ...assets, initialData: props, pageName });
   };
 
   router.get(route, async (req: Request, res: Response) => {
@@ -44,11 +50,10 @@ export function createPageHandler<TData>({
     }
 
     if (strategy === "isr" && cached) {
-      const isStale =
-        revalidateMs && Date.now() - cached.timestamp > revalidateMs;
+      const isStale = Date.now() - cached.timestamp > revalidateMs!;
 
       if (isStale) {
-        generateHtml(req)
+        generateHtml(req, res)
           .then((html) => setCache(cacheKey, html))
           .catch((err) => console.error("[ISR] Revalidation failed:", err));
       }
@@ -58,9 +63,9 @@ export function createPageHandler<TData>({
 
     let html: string;
     try {
-      html = await generateHtml(req);
+      html = await generateHtml(req, res);
     } catch (err) {
-      console.error(`[${strategy.toUpperCase()}] getData failed:`, err);
+      console.error(`[${strategy.toUpperCase()}] getServerSideProps failed:`, err);
       return res.status(500).send("Internal Server Error");
     }
 
