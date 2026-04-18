@@ -1,6 +1,5 @@
-import { config } from "dotenv";
-
-config();
-
-export const PORT = process.env.PORT ?? "";
-export const ISR_REVALIDATE = Number(process.env.ISR_REVALIDATE ?? 0);
+// Shared env vars — only use import.meta.env.VITE_* here (safe for both server and browser).
+// Server-only vars (PORT, ISR_REVALIDATE, etc.) belong in src/server/env.ts.
+//
+// Example:
+// export const API_URL = import.meta.env.VITE_API_URL ?? "";

@@ -1,4 +1,4 @@
-import { PORT } from "@/shared/config";
+import { PORT } from "./env";
 import { createApp } from "./app";
 
 (async () => {

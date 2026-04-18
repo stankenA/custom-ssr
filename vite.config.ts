@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   base: "/public/",
+  publicDir: false,
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
   },

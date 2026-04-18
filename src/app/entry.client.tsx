@@ -1,7 +1,11 @@
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
+import {
+  PAGE_NAME_SCRIPT_ID,
+  INITIAL_DATA_SCRIPT_ID,
+  ROOT_ELEMENT_ID,
+} from "@/shared/config";
 import "@/shared/styles/index.css";
-import { PAGE_NAME_SCRIPT_ID, INITIAL_DATA_SCRIPT_ID, ROOT_ELEMENT_ID } from "@/shared/config";
 
 const read = (id: string) => {
   const el = document.getElementById(id);

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "vite build",
-    "dev": "pnpm run build && tsx watch src/server/index.ts"
+    "dev": "pnpm run build && tsx watch --env-file=.env src/server/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +17,6 @@
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "dotenv": "^17.2.3",
     "eslint": "^9.37.0",
     "nodemon": "^3.1.10",
     "tailwindcss": "^4.1.18",

@@ -1,4 +1,4 @@
-import { ISR_REVALIDATE } from "@/shared/config";
+import { ISR_REVALIDATE } from "@/server/env";
 import { createPageHandler } from "@/server/routes";
 import { MainPage } from ".";
 

@@ -1,2 +1,1 @@
-export { PORT, ISR_REVALIDATE } from "./env";
 export { PUBLIC_PATH, ROOT_ELEMENT_ID, PAGE_NAME_SCRIPT_ID, INITIAL_DATA_SCRIPT_ID } from "./constants";
