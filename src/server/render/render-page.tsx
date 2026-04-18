@@ -17,10 +17,13 @@ export const renderPage = (app: ReactElement, options?: RenderPageOptions) => {
 
       {options?.initialData ? (
         <script
+          id='__initial-data__'
+          type='application/json'
           dangerouslySetInnerHTML={{
-            __html: `window.__INITIAL_DATA__ = ${JSON.stringify(
-              options.initialData,
-            )}`,
+            __html: JSON.stringify(options.initialData).replace(
+              /<\/script>/gi,
+              "<\\/script>",
+            ),
           }}
         />
       ) : null}

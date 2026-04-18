@@ -39,7 +39,8 @@ export function createPageHandler<TData>({
   const assets = getPageAssets(getPageNameFromRoute(route));
 
   router.get(route, async (req: Request, res: Response) => {
-    const cacheKey = route + JSON.stringify(req.params);
+    const cacheKey =
+      strategy === "ssg" ? route : route + JSON.stringify(req.params);
 
     const cached = getCache(cacheKey);
 
@@ -52,20 +53,29 @@ export function createPageHandler<TData>({
         revalidateMs && Date.now() - cached.timestamp > revalidateMs;
 
       if (isStale) {
-        Promise.resolve().then(async () => {
-          const data = getData ? await getData(req) : undefined;
-          const html = renderPage(render(data as TData), {
-            ...assets,
-            initialData: data,
-          });
-          setCache(cacheKey, html);
-        });
+        Promise.resolve()
+          .then(async () => {
+            const data = getData ? await getData(req) : undefined;
+            const html = renderPage(render(data as TData), {
+              ...assets,
+              initialData: data,
+            });
+            setCache(cacheKey, html);
+          })
+          .catch((err) => console.error("[ISR] Revalidation failed:", err));
       }
 
       return res.send(cached.html);
     }
 
-    const data = getData ? await getData(req) : undefined;
+    let data: TData | undefined;
+    try {
+      data = getData ? await getData(req) : undefined;
+    } catch (err) {
+      console.error(`[${strategy.toUpperCase()}] getData failed:`, err);
+      return res.status(500).send("Internal Server Error");
+    }
+
     const html = renderPage(render(data as TData), {
       ...assets,
       initialData: data,

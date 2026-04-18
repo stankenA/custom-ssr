@@ -2,16 +2,12 @@ import { hydrateRoot } from "react-dom/client";
 import { MainPage } from "../pages/main";
 import "../shared/styles/index.css";
 
-declare global {
-  interface Window {
-    __INITIAL_DATA__?: any;
-  }
-}
-
 const container = document.getElementById("root");
+const dataEl = document.getElementById("__initial-data__");
+const initialData = dataEl ? JSON.parse(dataEl.textContent ?? "{}") : {};
 
 if (!container) {
   throw new Error("Root container not found");
 }
 
-hydrateRoot(container, <MainPage {...window.__INITIAL_DATA__} />);
+hydrateRoot(container, <MainPage {...initialData} />);
