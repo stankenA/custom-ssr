@@ -1,5 +1,3 @@
-export const pageConfig = { route: "/static" };
-
 const StaticPage = () => {
   return (
     <main className='min-h-screen bg-indigo-600'>

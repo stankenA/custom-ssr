@@ -5,7 +5,6 @@ type MainPageProps = {
   date: number;
 };
 
-export const pageConfig = { route: "/", revalidateMs: 60_000 };
 export const getServerSideProps: GetServerSideProps<
   MainPageProps
 > = async () => {

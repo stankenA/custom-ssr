@@ -10,7 +10,7 @@ type ManifestEntry = {
 
 const manifestPath = path.resolve(process.cwd(), "public/.vite/manifest.json");
 
-function loadManifest() {
+const loadManifest = () => {
   try {
     return JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as Record<
       string,
@@ -20,11 +20,11 @@ function loadManifest() {
     console.error("Failed to load Vite manifest — did you run the build?");
     return {};
   }
-}
+};
 
 const manifest = loadManifest();
 
-function extractAssets(entry: ManifestEntry) {
+const extractAssets = (entry: ManifestEntry) => {
   const normalize = (f: string) => (f.startsWith("/") ? f : `/${f}`);
 
   const assets = {
@@ -40,7 +40,7 @@ function extractAssets(entry: ManifestEntry) {
   });
 
   return assets;
-}
+};
 
 export const getPageAssets = () => {
   const entry = manifest["src/app/entry.client.tsx"];

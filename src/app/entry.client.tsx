@@ -7,13 +7,13 @@ import {
 } from "@/shared/config";
 import "@/shared/styles/index.css";
 
-const read = (id: string) => {
+const readScript = (id: string) => {
   const el = document.getElementById(id);
   return el ? JSON.parse(el.textContent ?? "null") : null;
 };
 
-const pageName: string = read(PAGE_NAME_SCRIPT_ID);
-const initialData = read(INITIAL_DATA_SCRIPT_ID) ?? {};
+const pageName: string = readScript(PAGE_NAME_SCRIPT_ID);
+const initialData = readScript(INITIAL_DATA_SCRIPT_ID) ?? {};
 const container = document.getElementById(ROOT_ELEMENT_ID);
 
 if (!container) throw new Error("Root container not found");

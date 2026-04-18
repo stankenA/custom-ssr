@@ -6,7 +6,6 @@ type PostPageProps = {
   post?: Post;
 };
 
-export const pageConfig = { route: "/posts/:id" };
 export const getServerSideProps: GetServerSideProps<PostPageProps> = async ({
   req,
 }) => {

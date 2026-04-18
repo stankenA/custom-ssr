@@ -9,7 +9,7 @@ export const createApp = async () => {
 
   app.use(PUBLIC_PATH, express.static(path.join(__dirname, "../../public")));
   app.use("/api", apiRouter);
-  await discoverPageRoutes(app);
+  discoverPageRoutes(app);
 
   return app;
 };
