@@ -11,32 +11,32 @@ type PageHandlerConfig<TProps extends Record<string, unknown>> = {
   revalidateMs?: number;
 };
 
-function getPageNameFromRoute(route: string): string {
+const getPageNameFromRoute = (route: string) => {
   const baseRoute = route.split("/")[1] || "main";
   return baseRoute.startsWith(":") ? "main" : baseRoute;
-}
+};
 
-export function createPageHandler<TProps extends Record<string, unknown>>({
+export const createPageHandler = <TProps extends Record<string, unknown>>({
   route,
   page: Page,
   getServerSideProps,
   revalidateMs,
-}: PageHandlerConfig<TProps>) {
+}: PageHandlerConfig<TProps>) => {
   const router = Router();
   const pageName = getPageNameFromRoute(route);
   const assets = getPageAssets();
 
-  const strategy = getServerSideProps
-    ? revalidateMs
-      ? "isr"
-      : "ssr"
-    : "ssg";
+  const strategy = getServerSideProps ? (revalidateMs ? "isr" : "ssr") : "ssg";
 
   const generateHtml = async (req: Request, res: Response): Promise<string> => {
     const props = getServerSideProps
       ? (await getServerSideProps({ req, res })).props
       : ({} as TProps);
-    return renderPage(<Page {...props} />, { ...assets, initialData: props, pageName });
+    return renderPage(<Page {...props} />, {
+      ...assets,
+      initialData: props,
+      pageName,
+    });
   };
 
   router.get(route, async (req: Request, res: Response) => {
@@ -65,7 +65,10 @@ export function createPageHandler<TProps extends Record<string, unknown>>({
     try {
       html = await generateHtml(req, res);
     } catch (err) {
-      console.error(`[${strategy.toUpperCase()}] getServerSideProps failed:`, err);
+      console.error(
+        `[${strategy.toUpperCase()}] getServerSideProps failed:`,
+        err,
+      );
       return res.status(500).send("Internal Server Error");
     }
 
@@ -77,4 +80,4 @@ export function createPageHandler<TProps extends Record<string, unknown>>({
   });
 
   return router;
-}
+};
