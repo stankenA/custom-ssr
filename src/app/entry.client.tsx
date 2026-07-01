@@ -5,6 +5,7 @@ import {
   INITIAL_DATA_SCRIPT_ID,
   ROOT_ELEMENT_ID,
 } from "@/shared/config";
+import App from "@/pages/_app";
 import "@/shared/styles/index.css";
 
 const readScript = (id: string) => {
@@ -30,4 +31,4 @@ const mod = await loader();
 const Component = mod.default;
 if (!Component) throw new Error(`No component exported from page: ${pageName}`);
 
-hydrateRoot(container, <Component {...initialData} />);
+hydrateRoot(container, <App Component={Component} pageProps={initialData} />);
