@@ -5,22 +5,16 @@ import { renderPage, getPageAssets } from "../render";
 import { GetServerSideProps } from "@/shared/types";
 
 type PageHandlerConfig<TProps extends Record<string, unknown>> = {
-  route: string;
+  moduleId: string;
   page: ComponentType<TProps>;
   getServerSideProps?: GetServerSideProps<TProps>;
 };
 
-const getPageNameFromRoute = (route: string) => {
-  const baseRoute = route.split("/")[1] || "main";
-  return baseRoute.startsWith(":") ? "main" : baseRoute;
-};
-
 export const createPageHandler = <TProps extends Record<string, unknown>>({
-  route,
+  moduleId,
   page: Page,
   getServerSideProps,
 }: PageHandlerConfig<TProps>) => {
-  const pageName = getPageNameFromRoute(route);
   const assets = getPageAssets();
 
   return async (req: Request, res: Response) => {
@@ -32,7 +26,7 @@ export const createPageHandler = <TProps extends Record<string, unknown>>({
       const html = renderPage(<App Component={Page} pageProps={props} />, {
         ...assets,
         initialData: props,
-        pageName,
+        moduleId,
       });
 
       res.send(html);

@@ -1,6 +1,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import { pagesPlugin } from "./plugins/vite-plugin-pages";
 
 export default defineConfig({
   base: "/public/",
@@ -26,5 +27,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [tailwindcss()],
+  plugins: [pagesPlugin(), tailwindcss()],
 });

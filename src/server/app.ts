@@ -11,12 +11,12 @@ export const createApp = async () => {
   app.use(PUBLIC_PATH, express.static(path.join(__dirname, "../../public")));
   app.use("/api", apiRouter);
 
-  for (const [route, { Component, getServerSideProps }] of Object.entries(
+  for (const [route, { Component, getServerSideProps, moduleId }] of Object.entries(
     pageManifest,
   )) {
     app.get(
       route,
-      createPageHandler({ route, page: Component, getServerSideProps }),
+      createPageHandler({ moduleId, page: Component, getServerSideProps }),
     );
   }
 
