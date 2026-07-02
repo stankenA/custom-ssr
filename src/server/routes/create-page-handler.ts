@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { ComponentType } from "react";
-import App from "@/pages/_app";
 import { renderPage, getPageAssets } from "../render";
 import { GetServerSideProps } from "@/shared/types";
 
@@ -21,13 +20,9 @@ export const createPageHandler = <TProps extends Record<string, unknown>>({
     try {
       const props = getServerSideProps
         ? (await getServerSideProps({ req, res })).props
-        : ({} as TProps);
+        : null;
 
-      const html = renderPage(<App Component={Page} pageProps={props} />, {
-        ...assets,
-        initialData: props,
-        moduleId,
-      });
+      const html = renderPage({ Component: Page, props, moduleId, ...assets });
 
       res.send(html);
     } catch (err) {

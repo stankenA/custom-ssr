@@ -1,10 +1,8 @@
 import { PORT } from "./env";
 import { createApp } from "./app";
 
-(async () => {
-  const app = await createApp();
+const app = createApp();
 
-  app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-  });
-})();
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});

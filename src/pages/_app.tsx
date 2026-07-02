@@ -1,8 +1,8 @@
 import type { ComponentType } from "react";
 
 export type AppProps = {
-  Component: ComponentType<any>;
-  pageProps: Record<string, unknown>;
+  Component: ComponentType<unknown>;
+  pageProps: Record<string, unknown> | null;
 };
 
 const App = ({ Component, pageProps }: AppProps) => {

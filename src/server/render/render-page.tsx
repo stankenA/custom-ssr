@@ -1,13 +1,15 @@
 import { PAGE_MODULE_ID_SCRIPT_ID, INITIAL_DATA_SCRIPT_ID } from "@/shared/config";
 import { Html } from "@/shared/html-template";
-import { ReactElement } from "react";
+import App from "@/pages/_app";
+import { ComponentType } from "react";
 import { renderToString } from "react-dom/server";
 
 type RenderPageOptions = {
+  Component: ComponentType<any>;
+  props: Record<string, unknown> | null;
+  moduleId: string;
   js?: string;
   css?: string[];
-  initialData?: unknown;
-  moduleId?: string;
 };
 
 const JsonScript = ({ id, data }: { id: string; data: unknown }) => (
@@ -20,17 +22,23 @@ const JsonScript = ({ id, data }: { id: string; data: unknown }) => (
   />
 );
 
-export const renderPage = (app: ReactElement, options?: RenderPageOptions) => {
-  const appHtml = renderToString(app);
+export const renderPage = ({
+  Component,
+  props,
+  moduleId,
+  js,
+  css,
+}: RenderPageOptions) => {
+  const appHtml = renderToString(<App Component={Component} pageProps={props} />);
 
   const html = renderToString(
-    <Html css={options?.css} js={options?.js}>
+    <Html css={css} js={js}>
       <div id='root' dangerouslySetInnerHTML={{ __html: appHtml }} />
-      {options?.moduleId && (
-        <JsonScript id={PAGE_MODULE_ID_SCRIPT_ID} data={options.moduleId} />
+      {moduleId && (
+        <JsonScript id={PAGE_MODULE_ID_SCRIPT_ID} data={moduleId} />
       )}
-      {options?.initialData != null && (
-        <JsonScript id={INITIAL_DATA_SCRIPT_ID} data={options.initialData} />
+      {props != null && (
+        <JsonScript id={INITIAL_DATA_SCRIPT_ID} data={props} />
       )}
     </Html>,
   );
