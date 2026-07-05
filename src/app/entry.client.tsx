@@ -21,8 +21,8 @@ if (!container) throw new Error("Root container not found");
 if (!moduleId) throw new Error("Page module id not injected by server");
 
 const modules = import.meta.glob<{ default: React.ComponentType<any> }>([
-  "../pages/*.tsx",
   "../pages/**/*.tsx",
+  "!../pages/**/_*",
 ]);
 
 const loader = modules[`../pages/${moduleId}.tsx`];
