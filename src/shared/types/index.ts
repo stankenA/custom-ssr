@@ -15,3 +15,11 @@ export type GetServerSidePropsContext = {
 export type GetServerSideProps<Props extends Record<string, unknown> = Record<string, unknown>> = (
   ctx: GetServerSidePropsContext
 ) => Promise<{ props: Props }>;
+
+export type GetStaticPropsContext = {
+  params: Record<string, string>;
+};
+
+export type GetStaticProps<Props extends Record<string, unknown> = Record<string, unknown>> = (
+  ctx: GetStaticPropsContext
+) => Promise<{ props: Props }>;

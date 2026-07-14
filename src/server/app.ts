@@ -13,11 +13,16 @@ export const createApp = () => {
 
   for (const [
     route,
-    { Component, getServerSideProps, moduleId },
+    { Component, getServerSideProps, getStaticProps, moduleId },
   ] of Object.entries(pageManifest)) {
     app.get(
       route,
-      createPageHandler({ moduleId, page: Component, getServerSideProps }),
+      createPageHandler({
+        moduleId,
+        page: Component,
+        getServerSideProps,
+        getStaticProps,
+      }),
     );
   }
 
